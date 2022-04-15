@@ -18,15 +18,15 @@ interface DependenciesOverrides {
 }
 
 interface HttpApiCallOptions {
-	url: string;
-	options: Partial<{
-		timeout: number;
-		body: Record<string, unknown>;
-		withCredentials: boolean;
-		success: SuccessCallback<unknown>;
-		error: ErrorCallback;
-		async: boolean;
-	}>;
+  url: string;
+  options: Partial<{
+    timeout: number;
+    body: Record<string, unknown>;
+    withCredentials: boolean;
+    success: SuccessCallback<unknown>;
+    error: ErrorCallback;
+    async: boolean;
+  }>;
 }
 
 interface Dependencies {
@@ -73,17 +73,17 @@ export default class Janus {
   static init(options?: Partial<InitOptions>): void;
 
   constructor(options?:
-		Pick<ConstructorOptions, 'server'> &
-		Partial<Omit<ConstructorOptions, 'server'>>
-	);
+    Pick<ConstructorOptions, 'server'> &
+    Partial<Omit<ConstructorOptions, 'server'>>
+  );
 
   getServer(): string;
   isConnected(): boolean;
-	reconnect(callbacks?: Partial<{
+  reconnect(callbacks?: Partial<{
     success: SuccessCallback<void>;
     error: ErrorCallback;
   }>): void;
-	getSessionId(): string;
+  getSessionId(): string;
   getInfo(callbacks?: Partial<{
     success: SuccessCallback<Record<string, unknown>>;
     error: ErrorCallback;
@@ -95,18 +95,18 @@ export default class Janus {
     success: SuccessCallback<void>;
     error: ErrorCallback;
   }>): void;
-	attach<P extends PluginName>(options:
-		PluginFactory<P> &
-		Partial<PluginOptions> &
-		PluginMessageCallback<P> &
-		Partial<PluginCallbacks>
-	): void;
+  attach<P extends PluginName>(options:
+    PluginFactory<P> &
+    Partial<PluginOptions> &
+    PluginMessageCallback<P> &
+    Partial<PluginCallbacks>
+  ): void;
 }
 
 interface PluginFactory<P extends PluginName> {
-	plugin: P
-	success: SuccessCallback<PluginHandleMap[P]>;
-	error: ErrorCallback;
+  plugin: P
+  success: SuccessCallback<PluginHandleMap[P]>;
+  error: ErrorCallback;
 }
 
 interface PluginOptions {
@@ -131,7 +131,7 @@ interface PluginCallbacks {
 }
 
 export interface PluginMessageCallback<P extends PluginName> {
-	onmessage(message: PluginMessageMap[P], jsep?: JSEP): void;
+  onmessage(message: PluginMessageMap[P], jsep?: JSEP): void;
 }
 
 export interface PluginHandle {
@@ -145,7 +145,7 @@ export interface PluginHandle {
     streamExternal: boolean;
     remoteStream?: MediaStream;
     mySdp?: Pick<JSEP, 'type' | 'sdp'>;
-		remoteSdp?: JSEP['sdp'];
+    remoteSdp?: JSEP['sdp'];
     mediaConstraints?: unknown;
     pc?: RTCPeerConnection;
     dataChannelOptions?: PluginOptions['dataChannelOptions'];
@@ -158,18 +158,18 @@ export interface PluginHandle {
       timer: number;
     };
     bitrate: Record<
-			StreamId | 'default',
-			{
-				timer?: string;
-				bsnow?: string;
-				bsbefore?: string;
-				tsnow?: string;
-				tsbefore?: string;
-				value: string;
-			}
-		>;
-		receiverTransforms: Record<'audio' | 'video', TransformStream>
-		senderTransforms: Record<'audio' | 'video', TransformStream>
+      StreamId | 'default',
+      {
+        timer?: string;
+        bsnow?: string;
+        bsbefore?: string;
+        tsnow?: string;
+        tsbefore?: string;
+        value: string;
+      }
+    >;
+    receiverTransforms: Record<'audio' | 'video', TransformStream>
+    senderTransforms: Record<'audio' | 'video', TransformStream>
   };
 
   getId(): PluginHandle['id'];
@@ -221,33 +221,33 @@ export interface PluginHandle {
 export type StreamId = RTCRtpTransceiver['mid']
 
 interface PluginHandleMap {
-	// 'janus.plugin.audiobridge': AudiobridgePluginHandle
-	// 'janus.plugin.duktape': DuktapePluginHandle
-	// 'janus.plugin.echotest': EchotestPluginHandle
-	// 'janus.plugin.lua': LuaPluginHandle
-	// 'janus.plugin.nosip': NosipPluginHandle
-	// 'janus.plugin.recordplay': RecordplayPluginHandle
-	// 'janus.plugin.sip': SipPluginHandle
-	'janus.plugin.streaming': StreamingPluginHandle
-	// 'janus.plugin.textroom': TextroomPluginHandle
-	// 'janus.plugin.videocall': VideocallPluginHandle
-	'janus.plugin.videoroom': VideoroomPluginHandle
-	// 'janus.plugin.voicemail': VoicemailPluginHandle
+  // 'janus.plugin.audiobridge': AudiobridgePluginHandle
+  // 'janus.plugin.duktape': DuktapePluginHandle
+  // 'janus.plugin.echotest': EchotestPluginHandle
+  // 'janus.plugin.lua': LuaPluginHandle
+  // 'janus.plugin.nosip': NosipPluginHandle
+  // 'janus.plugin.recordplay': RecordplayPluginHandle
+  // 'janus.plugin.sip': SipPluginHandle
+  'janus.plugin.streaming': StreamingPluginHandle
+  // 'janus.plugin.textroom': TextroomPluginHandle
+  // 'janus.plugin.videocall': VideocallPluginHandle
+  'janus.plugin.videoroom': VideoroomPluginHandle
+  // 'janus.plugin.voicemail': VoicemailPluginHandle
 }
 
 type PluginName = keyof PluginHandleMap
 
 interface PluginMessageMap {
-	'janus.plugin.videoroom': VideoroomMessage
-	'janus.plugin.streaming': StreamingMessage
+  'janus.plugin.videoroom': VideoroomMessage
+  'janus.plugin.streaming': StreamingMessage
 }
 
 interface JSEP {
   type: 'offer' | 'answer';
   sdp: string;
-	e2ee?: boolean;
-	rid_order?: "hml" | "lmh";
-	force_relay?: boolean;
+  e2ee?: boolean;
+  rid_order?: "hml" | "lmh";
+  force_relay?: boolean;
 }
 
 interface Offer {
