@@ -426,6 +426,24 @@ selfieSegmentation.setOptions({
 });
 selfieSegmentation.onResults(handleSegmentationResults);
 
+function startDrawingOnCanvas(video, fps=60) {
+	const fpsInterval = 1000/fps;
+	let then = performance.now();
+
+	async function getFrame(now) {
+		const elapsed = now - then;
+		if (elapsed < fpsInterval) {
+			return requestAnimationFrame(getFrame);
+		}
+
+		then = now - (elapsed % fpsInterval);
+		await selfieSegmentation.send({image: video})
+		requestAnimationFrame(getFrame);
+	}
+
+	requestAnimationFrame(getFrame);
+}
+
 // Helper function to create (and populate) our canvas element
 function createCanvas() {
 	// Capture the local webcam
@@ -454,15 +472,8 @@ function createCanvas() {
 				canvas.width = width;
 				canvas.height = height;
 				// Draw the video element on top of the canvas
-				let lastTime = new Date();
-				async function getFrames() {
-					const now = myvideo.currentTime;
-					if(now > lastTime)
-						await selfieSegmentation.send({image: myvideo});
-					lastTime = now;
-					requestAnimationFrame(getFrames);
-				};
-				getFrames();
+				// throttle to 30fps, i.e., do not upsample webcam's refresh rate (30fps) to browser's refresh rate (60fps)
+				startDrawingOnCanvas(myvideo, 30);
 				// Capture the canvas as a local MediaStream
 				canvasStream = canvas.captureStream();
 				canvasStream.addTrack(stream.getAudioTracks()[0]);
